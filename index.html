@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, #ff006e20 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, #8338ec20 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, #3a86ff20 0%, transparent 50%);
+            animation: bgShift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgShift {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { 
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 0, 110, 0.4);
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .project-card:hover::before {
+            left: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 0, 110, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .project-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-link {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            background: rgba(255, 0, 110, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .projects {
+                padding: 3rem 1rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <nav>
+            <div class="logo">Assignments</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <!-- <li><a href="#contact">Contact</a></li> -->
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Creative Developer</h1>
+            <p>Showcasing innovative web clones and UI masterpieces with cutting-edge design and flawless execution</p>
+            <a href="#projects" class="cta-button">Explore My Work</a>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <h2 class="section-title fade-in">Web Clone Assignments</h2>
+        
+        <div class="projects-grid">
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">🌐</div>
+                    <h3>Netflix Clone</h3>
+                </div>
+                <p>Netflix is a global streaming service offering movies, TV shows, documentaries, and original content on-demand across multiple devices.</p>
+                <div class="project-links">
+                    <a href="https://netflix-clone-lime-five-32.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">🛒</div>
+                    <h3>Gokiwi Clone</h3>
+                </div>
+                <p>E-commerce platform with product catalog, shopping cart, payment integration, user reviews, and order management system.</p>
+                <div class="project-links">
+                    <a href="https://gokiwi-clone.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">🎵</div>
+                    <h3>Hulu Clone</h3>
+                </div>
+                <p>Hulu is a streaming platform offering on-demand movies, TV shows, originals, and live TV channels in the United States.</p>
+                <div class="project-links">
+                    <a href="https://hulu-clone-kappa-ashy.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">💼</div>
+                    <h3>Acko Clone</h3>
+                </div>
+                <p>Acko is a digital-first insurance company offering quick, paperless policies and claims processing.</p>
+                <div class="project-links">
+                    <a href="https://acko-clone.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">🎬</div>
+                    <h3>Nothing Clone</h3>
+                </div>
+                <p>Nothing is a tech company creating minimalist, design-focused consumer electronics and devices.</p>
+                <div class="project-links">
+                    <a href="https://nothing-clone-beige.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title fade-in" style="margin-top: 5rem;">UI Clone Assignments</h2>
+        
+        <div class="projects-grid">
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">📱</div>
+                    <h3>Blockchain UI Clone</h3>
+                </div>
+                <p>Pixel-perfect Instagram interface with stories, feed, reels section, and interactive components using modern CSS.</p>
+                <div class="project-links">
+                    <a href="https://blockchain-ui-livid.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">🐦</div>
+                    <h3>Scooter UI Clone</h3>
+                </div>
+                <p>Modern Twitter interface recreation with tweet composer, timeline, trending sidebar, and responsive navigation.</p>
+                <div class="project-links">
+                    <a href="https://scooter-ui.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">📊</div>
+                    <h3>NFT UI Clone</h3>
+                </div>
+                <p>Professional admin dashboard with charts, data tables, analytics widgets, and clean Material Design components.</p>
+                <div class="project-links">
+                    <a href="https://scooter-ui-m5sl.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">💬</div>
+                    <h3>Dashboard UI Clone</h3>
+                </div>
+                <p>Chat application interface with conversation list, message bubbles, emoji picker, and mobile-first design approach.</p>
+                <div class="project-links">
+                    <a href="https://new-ui-vert-eta.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-header">
+                    <div class="project-icon">🎨</div>
+                    <h3>Lamps UI Clone</h3>
+                </div>
+                <p>Creative showcase platform with image grid, hover effects, user profiles, and smooth animations for design portfolio.</p>
+                <div class="project-links">
+                    <a href="https://lamps-ui.vercel.app/" class="project-link">Live Demo</a>
+                    <!-- <a href="#" class="project-link">Source Code</a> -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Intersection Observer for fade-in animations
+        function setupScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-in').forEach((el) => {
+                observer.observe(el);
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        function setupSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Add dynamic mouse follow effect
+        function setupMouseEffect() {
+            document.addEventListener('mousemove', (e) => {
+                const cursor = document.createElement('div');
+                cursor.style.position = 'fixed';
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                cursor.style.width = '10px';
+                cursor.style.height = '10px';
+                cursor.style.background = 'rgba(255, 0, 110, 0.3)';
+                cursor.style.borderRadius = '50%';
+                cursor.style.pointerEvents = 'none';
+                cursor.style.zIndex = '9999';
+                cursor.style.animation = 'fadeOut 1s ease-out forwards';
+                document.body.appendChild(cursor);
+
+                setTimeout(() => cursor.remove(), 1000);
+            });
+        }
+
+        // Add CSS for fadeOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                0% { 
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                100% { 
+                    opacity: 0;
+                    transform: scale(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            setupScrollAnimations();
+            setupSmoothScrolling();
+            setupMouseEffect();
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const bg = document.querySelector('.bg-animation');
+            
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+            if (bg) {
+                bg.style.transform = `translateY(${scrolled * 0.2}px) scale(1.1)`;
+            }
+        });
+    </script>
+</body>
+</html>
